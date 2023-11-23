@@ -1,7 +1,12 @@
 import { useState } from "react";
+import React, { useRef } from 'react';
 import "./App.css";
+import toast from "react-hot-toast";
+import emailjs from '@emailjs/browser';
+
 
 function App() {
+  const form = useRef();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -30,11 +35,37 @@ function App() {
   function submitHandler(event) {
     event.preventDefault();
     console.log(formData);
+    // send email
+   
+    emailjs.sendForm('service_1y5khru', 'template_1u9cfnj', form.current , 'd8SwaxdsS5_SCQ77u')
+    .then((result) => {
+        console.log(result.text);
+    }, (error) => {
+        console.log(error.text);
+    });
+    // resetting form data
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      country: "India",
+      streetAddress: "",
+      city: "",
+      state: "",
+      zip: "",
+      comments: false,
+      candidates: false,
+      offers: false,
+      pushNotifications: "",
+    });
+
+    toast.success('Form sent Successfully!')
   }
+
   return (
     <div className="flex flex-col items-center w-full mx-auto  ">
       <h1 className="font-bold text-5xl text-center my-4">React Form </h1>
-      <form onSubmit={submitHandler} className="w-[60%] my-4 mx-auto ">
+      <form ref={form} action="https://formsubmit.co/sargarpranjali@gmail.com" method="POST" onSubmit={submitHandler} className="w-[60%] my-4 mx-auto ">
         <label htmlFor="firstName" className="font-semibold text-xl">
           First Name:
         </label>
